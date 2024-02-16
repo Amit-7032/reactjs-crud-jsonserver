@@ -9,6 +9,7 @@ const EmpListing = () => {
   const [selectedEmpId, setSelectedEmpId] = useState(null);
   const [sortCriteria, setSortCriteria] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const handelDetail = (id) => {
@@ -80,7 +81,18 @@ const EmpListing = () => {
     }
   };
 
-  const sortedEmpData = empData ? [...empData] : [];
+  const filteredEmpData = empData
+    ? empData.filter((item) =>
+        Object.values(item).some(
+          (value) =>
+            value &&
+            value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      )
+    : [];
+
+  // const sortedEmpData = empData ? [...empData] : [];
+  const sortedEmpData = [...filteredEmpData];
   if (sortCriteria) {
     sortedEmpData.sort((a, b) => {
       const aValue = a[sortCriteria];
@@ -91,18 +103,11 @@ const EmpListing = () => {
     });
   }
 
-  const getArrowColor = (criteria) => {
+  const getArrowClass = (criteria) => {
     if (sortCriteria === criteria) {
-      return "text-dark";
+      return sortOrder === "asc" ? "fa fa-sort-up" : "fa fa-sort-down";
     }
-    return "text-secondary";
-  };
-
-  const getArrow = (criteria) => {
-    if (sortCriteria === criteria) {
-      return sortOrder === "asc" ? "↑" : "↓";
-    }
-    return "↑↓";
+    return "fa fa-sort";
   };
 
   return (
@@ -113,13 +118,24 @@ const EmpListing = () => {
             className="card-body"
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
-            <div
-              className="create-btn"
-              style={{ display: "flex", alignItems: "start" }}
-            >
-              <Link className="btn btn-success" to="/employee/create">
-                Add New (+)
-              </Link>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div
+                className="create-btn"
+                style={{ display: "flex", alignItems: "start" }}
+              >
+                <Link className="btn btn-success" to="/employee/create">
+                  Add New (+)
+                </Link>
+              </div>
+              <div className="create-btn" style={{ display: "flex" }}>
+                <input
+                  type="search"
+                  className="form-control mr-sm-2"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
             </div>
             <table className="table table-bordered">
               <thead
@@ -129,27 +145,31 @@ const EmpListing = () => {
                 <tr>
                   <td
                     onClick={() => handleSort("id")}
-                    className={`bg-dark text-white ${getArrowColor("id")}`}
+                    className="bg-dark text-white"
                   >
-                    ID <span>{getArrow("id")}</span>
+                    ID{" "}
+                    <i className={getArrowClass("id")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("name")}
-                    className={`bg-dark text-white ${getArrowColor("name")}`}
+                    className="bg-dark text-white"
                   >
-                    Name <span>{getArrow("name")}</span>
+                    Name{" "}
+                    <i className={getArrowClass("name")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("email")}
-                    className={`bg-dark text-white ${getArrowColor("email")}`}
+                    className="bg-dark text-white"
                   >
-                    Email <span>{getArrow("email")}</span>
+                    Email{" "}
+                    <i className={getArrowClass("email")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("phone")}
-                    className={`bg-dark text-white ${getArrowColor("phone")}`}
+                    className="bg-dark text-white"
                   >
-                    Phone <span>{getArrow("phone")}</span>
+                    Phone{" "}
+                    <i className={getArrowClass("phone")} aria-hidden="true"></i>
                   </td>
                   <td className="bg-dark text-white">Action</td>
                 </tr>
