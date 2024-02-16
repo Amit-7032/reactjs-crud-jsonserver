@@ -1,0 +1,32 @@
+{
+  "employee": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "ad@test.com",
+      "phone": "9876543210",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Peter",
+      "email": "cp123@test.com",
+      "phone": "7898800088",
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Stuart",
+      "email": "ztuart@little.com",
+      "phone": "8700980087",
+      "active": false
+    },
+    {
+      "id": 4,
+      "name": "Loki",
+      "email": "yoki@test.com",
+      "phone": "9878780098",
+      "active": true
+    }
+  ]
+}

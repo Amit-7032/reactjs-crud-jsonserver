@@ -36,3 +36,67 @@
     transform: rotate(360deg);
   }
 }
+
+.btn {
+  margin: 3px;
+}
+
+.create-btn {
+  float: left;
+}
+
+.app-h1 {
+  padding: 30px 0 50px 0;
+}
+
+/* .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal p {
+  margin-bottom: 20px;
+} */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Darken the background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+.modal-content {
+  /* Add additional styles for the content if needed */
+}
+
+.modal-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Additional styles for buttons, if needed */
