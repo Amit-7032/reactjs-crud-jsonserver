@@ -103,18 +103,11 @@ const EmpListing = () => {
     });
   }
 
-  const getArrowColor = (criteria) => {
+  const getArrowClass = (criteria) => {
     if (sortCriteria === criteria) {
-      return "text-dark";
+      return sortOrder === "asc" ? "fa fa-sort-up" : "fa fa-sort-down";
     }
-    return "text-primary";
-  };
-
-  const getArrow = (criteria) => {
-    if (sortCriteria === criteria) {
-      return sortOrder === "asc" ? "↑" : "↓";
-    }
-    return "↑↓";
+    return "fa fa-sort";
   };
 
   return (
@@ -152,27 +145,31 @@ const EmpListing = () => {
                 <tr>
                   <td
                     onClick={() => handleSort("id")}
-                    className={`bg-dark text-white ${getArrowColor("id")}`}
+                    className="bg-dark text-white"
                   >
-                    ID <span>{getArrow("id")}</span>
+                    ID{" "}
+                    <i className={getArrowClass("id")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("name")}
-                    className={`bg-dark text-white ${getArrowColor("name")}`}
+                    className="bg-dark text-white"
                   >
-                    Name <span>{getArrow("name")}</span>
+                    Name{" "}
+                    <i className={getArrowClass("name")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("email")}
-                    className={`bg-dark text-white ${getArrowColor("email")}`}
+                    className="bg-dark text-white"
                   >
-                    Email <span>{getArrow("email")}</span>
+                    Email{" "}
+                    <i className={getArrowClass("email")} aria-hidden="true"></i>
                   </td>
                   <td
                     onClick={() => handleSort("phone")}
-                    className={`bg-dark text-white ${getArrowColor("phone")}`}
+                    className="bg-dark text-white"
                   >
-                    Phone <span>{getArrow("phone")}</span>
+                    Phone{" "}
+                    <i className={getArrowClass("phone")} aria-hidden="true"></i>
                   </td>
                   <td className="bg-dark text-white">Action</td>
                 </tr>
