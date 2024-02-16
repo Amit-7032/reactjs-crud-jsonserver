@@ -9,6 +9,7 @@ const EmpListing = () => {
   const [selectedEmpId, setSelectedEmpId] = useState(null);
   const [sortCriteria, setSortCriteria] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const handelDetail = (id) => {
@@ -80,7 +81,18 @@ const EmpListing = () => {
     }
   };
 
-  const sortedEmpData = empData ? [...empData] : [];
+  const filteredEmpData = empData
+    ? empData.filter((item) =>
+        Object.values(item).some(
+          (value) =>
+            value &&
+            value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      )
+    : [];
+
+  // const sortedEmpData = empData ? [...empData] : [];
+  const sortedEmpData = [...filteredEmpData];
   if (sortCriteria) {
     sortedEmpData.sort((a, b) => {
       const aValue = a[sortCriteria];
@@ -95,7 +107,7 @@ const EmpListing = () => {
     if (sortCriteria === criteria) {
       return "text-dark";
     }
-    return "text-secondary";
+    return "text-primary";
   };
 
   const getArrow = (criteria) => {
@@ -113,13 +125,24 @@ const EmpListing = () => {
             className="card-body"
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
-            <div
-              className="create-btn"
-              style={{ display: "flex", alignItems: "start" }}
-            >
-              <Link className="btn btn-success" to="/employee/create">
-                Add New (+)
-              </Link>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div
+                className="create-btn"
+                style={{ display: "flex", alignItems: "start" }}
+              >
+                <Link className="btn btn-success" to="/employee/create">
+                  Add New (+)
+                </Link>
+              </div>
+              <div className="create-btn" style={{ display: "flex" }}>
+                <input
+                  type="search"
+                  className="form-control mr-sm-2"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
             </div>
             <table className="table table-bordered">
               <thead
