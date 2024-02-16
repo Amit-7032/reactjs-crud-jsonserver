@@ -7,6 +7,8 @@ const EmpListing = () => {
   const [empData, setEmpData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedEmpId, setSelectedEmpId] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
   const navigate = useNavigate();
 
   const handelDetail = (id) => {
@@ -17,28 +19,6 @@ const EmpListing = () => {
     navigate(`/employee/edit/${id}`);
   };
   const handelRemove = (id) => {
-    // if (window.confirm("Do you want to remove")) {
-    //   fetch(`http://localhost:8000/employee/${id}`, {
-    //     method: "DELETE",
-    //   })
-    //     .then((res) => {
-    //       if (res.ok) {
-    //         setEmpData(empData.filter((item) => item.id !== id));
-    //         toast.success("Removed Successfully", {
-    //           position: "top-right",
-    //         });
-    //       } else {
-    //         throw new Error("Failed to delete");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //       toast.error("Getting some error, please try again!", {
-    //         position: "top-right",
-    //       });
-    //     });
-    // }
-
     setSelectedEmpId(id);
     setShowModal(true);
   };
@@ -86,30 +66,49 @@ const EmpListing = () => {
         .catch((error) => {
           console.log(error);
         });
-
-      // getAllCartItems();
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  //  const getAllCartItems = async () => {
-  //   try {
-  //     const res = await fetch('http://localhost:8000/employee');
-  //     const data = await res.json();
-  //     return setEmpData(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const handleSort = (criteria) => {
+    if (sortCriteria === criteria) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortCriteria(criteria);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedEmpData = empData ? [...empData] : [];
+  if (sortCriteria) {
+    sortedEmpData.sort((a, b) => {
+      const aValue = a[sortCriteria];
+      const bValue = b[sortCriteria];
+      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+  }
+
+  const getArrowColor = (criteria) => {
+    if (sortCriteria === criteria) {
+      return "text-dark";
+    }
+    return "text-secondary";
+  };
+
+  const getArrow = (criteria) => {
+    if (sortCriteria === criteria) {
+      return sortOrder === "asc" ? "↑" : "↓";
+    }
+    return "↑↓";
+  };
 
   return (
     <>
       <div className="container">
         <div className="card" style={{ paddingTop: "20px" }}>
-          {/* <div className="card-title">
-            <h2>Employee Listing Page</h2>
-          </div> */}
           <div
             className="card-body"
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
@@ -123,18 +122,41 @@ const EmpListing = () => {
               </Link>
             </div>
             <table className="table table-bordered">
-              <thead className="bg-dark text-white">
+              <thead
+                className="bg-dark text-white"
+                style={{ cursor: "pointer" }}
+              >
                 <tr>
-                  <td>ID</td>
-                  <td>Name</td>
-                  <td>Email</td>
-                  <td>Phone</td>
-                  <td>Action</td>
+                  <td
+                    onClick={() => handleSort("id")}
+                    className={`bg-dark text-white ${getArrowColor("id")}`}
+                  >
+                    ID <span>{getArrow("id")}</span>
+                  </td>
+                  <td
+                    onClick={() => handleSort("name")}
+                    className={`bg-dark text-white ${getArrowColor("name")}`}
+                  >
+                    Name <span>{getArrow("name")}</span>
+                  </td>
+                  <td
+                    onClick={() => handleSort("email")}
+                    className={`bg-dark text-white ${getArrowColor("email")}`}
+                  >
+                    Email <span>{getArrow("email")}</span>
+                  </td>
+                  <td
+                    onClick={() => handleSort("phone")}
+                    className={`bg-dark text-white ${getArrowColor("phone")}`}
+                  >
+                    Phone <span>{getArrow("phone")}</span>
+                  </td>
+                  <td className="bg-dark text-white">Action</td>
                 </tr>
               </thead>
               <tbody>
-                {empData &&
-                  empData.map((item) => (
+                {sortedEmpData &&
+                  sortedEmpData.map((item) => (
                     <tr key={item.id}>
                       <td>{item.id}</td>
                       <td>{item.name}</td>
