@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmationModal from "./ConfirmationModal";
 
 const EmpListing = () => {
   const [empData, setEmpData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEmpId, setSelectedEmpId] = useState(null);
   const navigate = useNavigate();
 
   const handelDetail = (id) => {
@@ -14,27 +17,59 @@ const EmpListing = () => {
     navigate(`/employee/edit/${id}`);
   };
   const handelRemove = (id) => {
-    if (window.confirm("Do you want to remove")) {
-      fetch(`http://localhost:8000/employee/${id}`, {
-        method: "DELETE",
-      })
-        .then((res) => {
-          if (res.ok) {
-            setEmpData(empData.filter((item) => item.id !== id));
-            toast.success("Removed Successfully", {
-              position: "top-right",
-            });
-          } else {
-            throw new Error("Failed to delete");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Getting some error, please try again!", {
+    // if (window.confirm("Do you want to remove")) {
+    //   fetch(`http://localhost:8000/employee/${id}`, {
+    //     method: "DELETE",
+    //   })
+    //     .then((res) => {
+    //       if (res.ok) {
+    //         setEmpData(empData.filter((item) => item.id !== id));
+    //         toast.success("Removed Successfully", {
+    //           position: "top-right",
+    //         });
+    //       } else {
+    //         throw new Error("Failed to delete");
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //       toast.error("Getting some error, please try again!", {
+    //         position: "top-right",
+    //       });
+    //     });
+    // }
+
+    setSelectedEmpId(id);
+    setShowModal(true);
+  };
+
+  const handleConfirmRemove = () => {
+    fetch(`http://localhost:8000/employee/${selectedEmpId}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res.ok) {
+          setEmpData(empData.filter((item) => item.id !== selectedEmpId));
+          toast.success("Employee data removed successfully", {
             position: "top-right",
           });
+        } else {
+          throw new Error("Failed to delete");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Getting some error, please try again!", {
+          position: "top-right",
         });
-    }
+      })
+      .finally(() => {
+        setShowModal(false);
+      });
+  };
+
+  const handleCancelRemove = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -138,6 +173,13 @@ const EmpListing = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <ConfirmationModal
+          message="Are you sure you want to remove this employee?"
+          onConfirm={handleConfirmRemove}
+          onCancel={handleCancelRemove}
+        />
+      )}
     </>
   );
 };
